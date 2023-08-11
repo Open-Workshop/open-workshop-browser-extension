@@ -1,0 +1,12 @@
+.subscribeIcon .loader {
+    width: 15px;
+    height: 15px;
+    border-width: 2px;
+    display: block;
+}
+
+.subscribeIcon {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}

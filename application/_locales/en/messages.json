@@ -1,0 +1,79 @@
+{
+    "extName": {
+        "message": "Open Workshop"
+    },
+    "extDescr": {
+        "message": "Download modification from steam web page"
+    },
+    "indexNavLink": {
+        "message": "Download page"
+    },
+    "indexMainMessage": {
+        "message": "Go to the mod page and click the button - <b>Download</b>"
+    },
+    "downloadTableName": {
+        "message": "Name"
+    },
+    "downloadTableStatus": {
+        "message": "Status"
+    },
+    "downloadTableStatusNew": {
+        "message": "Registration"
+    },
+    "downloadTableStatusInfo": {
+        "message": "Receiving the information"
+    },
+    "downloadTableStatusWait": {
+        "message": "Waiting for the server (%time%)",
+        "placeholders": {
+            "time": {
+              "content": "$1",
+              "example": "Waiting for the server (5m)"
+            }
+        }
+    },
+    "downloadTableStatusReady": {
+        "message": "Loading"
+    },
+    "downloadTableStatusManually": {
+        "message": "Stopped"
+    },
+    "downloadTableStatusNewDescription": {
+        "message": "This is the technical stage. The extension registers a new addon for further work with it. If you managed to read this message and the status has not changed, then there is a problem. Try reinstalling the extension or write to the developers"
+    },
+    "downloadTableStatusInfoDescription": {
+        "message": "Getting information about the status of the mod on the server. If it hasn't been downloaded yet, the extension will prompt you to download it"
+    },
+    "downloadTableStatusWaitDescription": {
+        "message": "Waiting for the modification to load on the server side. This is a long process. If no other modifications are queued, this may take %time%",
+        "placeholders": {
+            "time": {
+              "content": "$1"
+            }
+        }
+    },
+    "downloadTableStatusReadyDescription": {
+        "message": "The extension downloads the modification"
+    },
+    "downloadTableStatusManuallyDescription": {
+        "message": "Mod loading stopped. Cause: "
+    },
+    "downloadTableStatusManuallyServerErrorBatch": {
+        "message": "batch polling of modification statuses ended with an error"
+    },
+    "downloadTableStatusManuallyServerError404": {
+        "message": "unable to find mod on steam server"
+    },
+    "downloadTableStatusManuallyServerErrorInfo": {
+        "message": "retrieving modification information failed"
+    },
+    "downloadTableStatusManuallyServerErrorGone": {
+        "message": "at the stage of waiting for the modification to be loaded by the server, the modification data disappeared"
+    },
+    "downloadTableStatusManuallyServerErrorDownload": {
+        "message": "modification file download failed"
+    },
+    "downloadTableStatusManuallyStopped": {
+        "message": "stopped by user"
+    }
+}

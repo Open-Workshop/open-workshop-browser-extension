@@ -1,0 +1,42 @@
+{
+  "name": "__MSG_extName__",
+  "version": "0.2.0",
+  "manifest_version": 3,
+  "description": "__MSG_extDescr__",
+  "default_locale": "en",
+  "action": {
+    "default_popup": "index.html",
+    "default_icon": "icon.png"
+  },
+  "icons": {
+    "16": "icon16.png",
+    "32": "icon32.png",
+    "48": "icon48.png",
+    "128": "icon128.png"
+  },
+  "background": {
+    "service_worker": "background.js",
+    "type": "module"
+  },  
+  "web_accessible_resources": [
+    {
+      "resources": ["index.js", "download.html", "steampage.js", "constants.js", "helpers.js", "rabbit.png", "turtle.png", "warning.png"],
+      "matches": ["<all_urls>"]
+    }
+  ],
+  "permissions": [
+    "tabs",
+    "storage"
+  ],
+  "content_scripts": [
+    {
+      "js": ["content-script-steampage.js"],
+      "css": ["loader.css", "steampage.css"],
+      "matches": [
+        "https://steamcommunity.com/sharedfiles/filedetails/*",
+        "https://steamcommunity.com/workshop/filedetails/*"
+      ],
+      "run_at": "document_end"
+    }
+  ]
+}

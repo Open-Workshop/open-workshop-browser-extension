@@ -1,0 +1,78 @@
+{
+    "extName": {
+        "message": "Open Workshop"
+    },
+    "extDescr": {
+        "message": "Завантажуй модифікації зі сторінок Steam"
+    },
+    "indexNavLink": {
+        "message": "Сторінка завантажень"
+    },
+    "indexMainMessage": {
+        "message": "Перейдіть на сторінку модифікації та натисніть <b>Завантажити</b>"
+    },
+    "downloadTableName": {
+        "message": "Назва"
+    },
+    "downloadTableStatus": {
+        "message": "Статус"
+    },
+    "downloadTableStatusNew": {
+        "message": "Реєстрація"
+    },
+    "downloadTableStatusInfo": {
+        "message": "Отримання інформації"
+    },
+    "downloadTableStatusWait": {
+        "message": "Очікування серверу (%time%)",
+        "placeholders": {
+            "time": {
+              "content": "$1"
+            }
+        }
+    },
+    "downloadTableStatusReady": {
+        "message": "Завантаження"
+    },
+    "downloadTableStatusManually": {
+        "message": "Зупинено"
+    },
+    "downloadTableStatusNewDescription": {
+        "message": "Це технічний етап. Розширення реєструє новий аддон для подальшої роботи з ним. Якщо ви встигли прочитати це повідомлення і статус не змінився, значить виникла проблема. Спробуйте перевстановити розширення або написати розробникам"
+    },
+    "downloadTableStatusInfoDescription": {
+        "message": "Отримання інформації про статус модифікації на сервері. Якщо вона ще не завантажена, розширення запросить його завантаження"
+    },
+    "downloadTableStatusWaitDescription": {
+        "message": "Очікування завантаження модифікації на стороні сервера. Це тривалий процес. Якщо інші модифікації не стоять у черзі, це може зайняти %time%",
+        "placeholders": {
+            "time": {
+              "content": "$1"
+            }
+        }
+    },
+    "downloadTableStatusReadyDescription": {
+        "message": "Розширення завантажує модифікацію"
+    },
+    "downloadTableStatusManuallyDescription": {
+        "message": "Завантаження модифікації зупинено. Причина: "
+    },
+    "downloadTableStatusManuallyServerErrorBatch": {
+        "message": "пакетне опитування статусів модифікацій завершилося помилкою"
+    },
+    "downloadTableStatusManuallyServerError404": {
+        "message": "не вдалося знайти модифікацію на сервері steam"
+    },
+    "downloadTableStatusManuallyServerErrorInfo": {
+        "message": "отримання інформації про модифікацію завершилося помилкою"
+    },
+    "downloadTableStatusManuallyServerErrorGone": {
+        "message": "очікуючи завантаження модифікації сервером, дані було втрачено"
+    },
+    "downloadTableStatusManuallyServerErrorDownload": {
+        "message": "завантаження файлу завершилося помилкою"
+    },
+    "downloadTableStatusManuallyStopped": {
+        "message": "зупинено користувачем"
+    }
+}

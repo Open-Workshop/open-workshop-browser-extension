@@ -1,0 +1,78 @@
+{
+    "extName": {
+        "message": "Open Workshop"
+    },
+    "extDescr": {
+        "message": "Загружай модификации со страниц Steam"
+    },
+    "indexNavLink": {
+        "message": "Страница загрузок"
+    },
+    "indexMainMessage": {
+        "message": "Пройдите на страницу мода и нажмите кнопку - <b>Загрузить</b>"
+    },
+    "downloadTableName": {
+        "message": "Название"
+    },
+    "downloadTableStatus": {
+        "message": "Статус"
+    },
+    "downloadTableStatusNew": {
+        "message": "Регистрация"
+    },
+    "downloadTableStatusInfo": {
+        "message": "Получение информации"
+    },
+    "downloadTableStatusWait": {
+        "message": "Ожидание сервера (%time%)",
+        "placeholders": {
+            "time": {
+              "content": "$1"
+            }
+        }
+    },
+    "downloadTableStatusReady": {
+        "message": "Загрузка"
+    },
+    "downloadTableStatusManually": {
+        "message": "Остановлен"
+    },
+    "downloadTableStatusNewDescription": {
+        "message": "Это технический этап. Расширение регистрирует новый аддон для дальнейшей работы с ним. Если вы успели прочесть это сообщение и статус не изменился значит возникла проблема. Попробуйте переустановить расширение либо написать разработчикам"
+    },
+    "downloadTableStatusInfoDescription": {
+        "message": "Получение информации о статусе мода на сервере. Если он еще не скачан, расширение запросит его загрузку"
+    },
+    "downloadTableStatusWaitDescription": {
+        "message": "Ожидание загрузки модификации на стороне сервера. Это длительный процесс. Если другие модификации не стоят в очереди это может занять %time%",
+        "placeholders": {
+            "time": {
+              "content": "$1"
+            }
+        }
+    },
+    "downloadTableStatusReadyDescription": {
+        "message": "Расширение скачивает модификацию"
+    },
+    "downloadTableStatusManuallyDescription": {
+        "message": "Загрузка модификации остановлена. Причина: "
+    },
+    "downloadTableStatusManuallyServerErrorBatch": {
+        "message": "пакетный опрос статусов модификаций завершился ошибкой"
+    },
+    "downloadTableStatusManuallyServerError404": {
+        "message": "не удалось найти модификацию на сервере steam"
+    },
+    "downloadTableStatusManuallyServerErrorInfo": {
+        "message": "получение информации о модификации завершилось ошибкой"
+    },
+    "downloadTableStatusManuallyServerErrorGone": {
+        "message": "на этапе ожидания загрузки модификации сервером, данные о модификации исчезли"
+    },
+    "downloadTableStatusManuallyServerErrorDownload": {
+        "message": "скачивание файла модификации завершилась ошибкой"
+    },
+    "downloadTableStatusManuallyStopped": {
+        "message": "остановлено пользователем"
+    }
+}
