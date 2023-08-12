@@ -1,7 +1,7 @@
-export const URL_INFO = "https://43093.zetalink.ru:8000/info/mod/"
-export const URL_DOWNLOAD = "https://43093.zetalink.ru:8000/download/steam/"
-export const URL_DIRECT_DOWNLOAD = "https://43093.zetalink.ru:8000/download/"
-export const URL_BATCH_STATUS = "https://43093.zetalink.ru:8000/condition/mod/"
+export const URL_INFO = "https://43093.zetalink.ru/info/mod/"
+export const URL_DOWNLOAD = "https://43093.zetalink.ru/download/steam/"
+export const URL_DIRECT_DOWNLOAD = "https://43093.zetalink.ru/download/"
+export const URL_BATCH_STATUS = "https://43093.zetalink.ru/condition/mod/"
 export const BATCH_LIMIT = 50
 export const RETRY_TIMEOUT_MS = 2000
 export const STORE_ITEMS_LIMIT = 100000
