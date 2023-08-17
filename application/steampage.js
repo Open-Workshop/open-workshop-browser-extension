@@ -4,10 +4,11 @@ import {
     DOWNLOAD_BUTTON_STATE_ERROR,
     COMMAND_CHECK_RESPONSE,
     COMMAND_CHECK,
-    COMMAND_DOWNLOAD
+    COMMAND_DOWNLOAD,
+    BATCH_LIMIT
 } from './constants.js'
 
-import { htmlToElement } from './helpers.js'
+import { htmlToElement, timeout } from './helpers.js'
 
 let ids = []
 
@@ -40,7 +41,7 @@ export function main () {
     })
 }
 
-export function domLoad () {
+export async function domLoad () {
     let btnSubscribe = document.querySelector('.game_area_purchase_game #SubscribeItemBtn')
 
     // single item
@@ -60,35 +61,6 @@ export function domLoad () {
     }
 
     let collectionItems = document.querySelectorAll('.collectionItem')
-
-    for (let cItem of collectionItems) {
-        let id = cItem.getAttribute('id').replace('sharedfile_', '')
-        let name = cItem.querySelector('.workshopItemTitle').innerText
-        ids.push(id)
-
-        let btn = renderCollectionButton(id, name)
-        cItem.querySelector('.subscriptionControls').appendChild(btn)
-    }
-
-    chrome.runtime.sendMessage({
-        command: COMMAND_CHECK,
-        mods: ids,
-    })
-
-    for (let id of ids) {
-        let button = getButtonById(id)
-        button.addEventListener('click', async () => {
-            let name = button.getAttribute('data-openws-name')
-
-            chrome.runtime.sendMessage({
-                command: COMMAND_DOWNLOAD,
-                mods: [{ id, name }],
-            })
-
-            setDownloadButtonState(button, DOWNLOAD_BUTTON_STATE_BUSY)
-            setDownloadButtonIcon(button, 'loading')
-        })
-    }
 
     if (collectionItems.length > 0) {
         let bulkButton = renderBulkButton()
@@ -127,6 +99,43 @@ export function domLoad () {
             setTimeout(() => {
                 bulkButton.removeAttribute("disabled")
             }, 5000)
+        })
+    }
+
+    let flush = 0
+    for (let cItem of collectionItems) {
+        flush += 1
+
+        let id = cItem.getAttribute('id').replace('sharedfile_', '')
+        let name = cItem.querySelector('.workshopItemTitle').innerText
+        ids.push(id)
+
+        let btn = renderCollectionButton(id, name)
+        cItem.querySelector('.subscriptionControls').appendChild(btn)
+
+        if (flush >= 25) {
+            await timeout(25)
+            flush = 0
+        }
+    }
+
+    chrome.runtime.sendMessage({
+        command: COMMAND_CHECK,
+        mods: ids,
+    })
+
+    for (let id of ids) {
+        let button = getButtonById(id)
+        button.addEventListener('click', async () => {
+            let name = button.getAttribute('data-openws-name')
+
+            chrome.runtime.sendMessage({
+                command: COMMAND_DOWNLOAD,
+                mods: [{ id, name }],
+            })
+
+            setDownloadButtonState(button, DOWNLOAD_BUTTON_STATE_BUSY)
+            setDownloadButtonIcon(button, 'loading')
         })
     }
 }
