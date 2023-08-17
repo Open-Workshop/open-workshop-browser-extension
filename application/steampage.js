@@ -1,197 +1,224 @@
 import {
-    // URL_INFO,
-    // URL_DOWNLOAD,
-    // RETRY_TIMEOUT_MS,
-    // INFO_CONDITION_NOT_REGISTERED,
-    // INFO_CONDITION_READY_TO_DOWNLOAD,
-    // DOWNLOAD_ERROR_NOT_FOUND,
     DOWNLOAD_BUTTON_STATE_DEFAULT,
     DOWNLOAD_BUTTON_STATE_BUSY,
     DOWNLOAD_BUTTON_STATE_ERROR,
-    DOWNLOAD_BUTTON_STRING_DEFAULT,
-    DOWNLOAD_BUTTON_STRING_BUSY,
-    DOWNLOAD_BUTTON_STRING_ERROR,
-    // DOWNLOAD_ALERT_NOT_FOUND,
-    // DOWNLOAD_ALERT_ERROR,
     COMMAND_CHECK_RESPONSE,
-    HINT_SERVER_ERROR,
-    HINT_FILE_NOT_READY,
-    HINT_FILE_READY,
+    COMMAND_CHECK,
+    COMMAND_DOWNLOAD
 } from './constants.js'
 
 import { htmlToElement } from './helpers.js'
 
-let btnTemplate = `
-    <button id="DownloadItemBtn" class="btn_green_white_innerfade btn_border_2px btn_medium" disabled>
-        <div class="subscribeIcon" style="background-image: none">
-            <span class="loader"></span>
-        </div>
-        <span class="subscribeText">
-            <div class="subscribeOption subscribe selected">${DOWNLOAD_BUTTON_STRING_DEFAULT}</div>
-        </span>
-    </button>
-`
-
-// let appid = document.querySelector(".apphub_sectionTab").href.split("/")[4]
-let searchParams = new URLSearchParams(location.search)
-let id = searchParams.get('id')
-let btnDownload
+let ids = []
 
 export function main () {
     chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
-        //console.log(request, sender, sendResponse)
-
         if (request.command && request.command == COMMAND_CHECK_RESPONSE) {
-            if (request.status === undefined) {
-                setDownloadButtonState(DOWNLOAD_BUTTON_STATE_ERROR)
-                setDownloadButtonIcon('warning.png', HINT_SERVER_ERROR)
-            } else if (request.status === false) {
-                setDownloadButtonState(DOWNLOAD_BUTTON_STATE_DEFAULT)
-                setDownloadButtonIcon('turtle.png', HINT_FILE_NOT_READY)
-            } else if (request.status === true) {
-                setDownloadButtonState(DOWNLOAD_BUTTON_STATE_DEFAULT)
-                setDownloadButtonIcon('rabbit.png', HINT_FILE_READY)
+            for (let id of ids) {
+                let res = request.status_list[id]
+                let button = getButtonById(id)
+
+                if (!button) {
+                    continue
+                }
+
+                if (res === undefined) {
+                    setDownloadButtonState(button, DOWNLOAD_BUTTON_STATE_ERROR)
+                    setDownloadButtonIcon(button, 'warning.png', chrome.i18n.getMessage('steampageHintError'))
+                } else if (res === false) {
+                    setDownloadButtonState(button, DOWNLOAD_BUTTON_STATE_DEFAULT)
+                    setDownloadButtonIcon(button, 'turtle.png', chrome.i18n.getMessage('steampageHintNotReady'))
+                } else if (res === true) {
+                    setDownloadButtonState(button, DOWNLOAD_BUTTON_STATE_DEFAULT)
+                    setDownloadButtonIcon(button, 'rabbit.png', chrome.i18n.getMessage('steampageHintReady'))
+                } else if (res === 'busy') {
+                    setDownloadButtonState(button, DOWNLOAD_BUTTON_STATE_BUSY)
+                    setDownloadButtonIcon(button, 'loading')
+                }
             }
         }
     })
 }
 
 export function domLoad () {
-    let btnSubscribe = document.getElementById('SubscribeItemBtn')
-    let container = btnSubscribe.parentElement
+    let btnSubscribe = document.querySelector('.game_area_purchase_game #SubscribeItemBtn')
 
-    container.style.display = 'flex'
-    container.style.flexDirection = 'column'
-
-    btnDownload = container.appendChild(htmlToElement(btnTemplate))
-
-    btnDownload.style.position = 'relative'
-    btnDownload.style.marginTop = '10px'
-
-    chrome.runtime.sendMessage({
-        command: 'check',
-        mod: id,
-    })
-
-    btnDownload.addEventListener('click', async () => {
+    // single item
+    if (btnSubscribe) {
+        let searchParams = new URLSearchParams(location.search)
+        let id = searchParams.get('id')
+        let container = btnSubscribe.parentElement
         let name = document.querySelector('.workshopItemTitle').innerText
 
-        chrome.runtime.sendMessage({
-            command: 'download',
-            mods: [{ id, name }],
-        })
+        container.style.display = 'flex'
+        container.style.flexDirection = 'column'
 
-        setDownloadButtonState(DOWNLOAD_BUTTON_STATE_BUSY)
-        setDownloadButtonIcon('loading')
+        let btn = renderSingleButton(id, name)
+        container.appendChild(btn)
+
+        ids.push(id)
+    }
+
+    let collectionItems = document.querySelectorAll('.collectionItem')
+
+    for (let cItem of collectionItems) {
+        let id = cItem.getAttribute('id').replace('sharedfile_', '')
+        let name = cItem.querySelector('.workshopItemTitle').innerText
+        ids.push(id)
+
+        let btn = renderCollectionButton(id, name)
+        cItem.querySelector('.subscriptionControls').appendChild(btn)
+    }
+
+    chrome.runtime.sendMessage({
+        command: COMMAND_CHECK,
+        mods: ids,
     })
-}
 
-// async function requestUntilDonwload (id) {
-//     setDownloadButtonState(DOWNLOAD_BUTTON_STATE_BUSY)
+    for (let id of ids) {
+        let button = getButtonById(id)
+        button.addEventListener('click', async () => {
+            let name = button.getAttribute('data-openws-name')
 
-//     try {
-//         let response = await fetch(URL_INFO + id)
-//         let out = await response.json()
+            chrome.runtime.sendMessage({
+                command: COMMAND_DOWNLOAD,
+                mods: [{ id, name }],
+            })
 
-//         if (
-//             parseInt(out.condition) == INFO_CONDITION_READY_TO_DOWNLOAD ||
-//             parseInt(out.condition) == INFO_CONDITION_NOT_REGISTERED
-//         ) {
-//             let downloadResponse = await fetch(URL_DOWNLOAD + id)
-//             let contentType = downloadResponse.headers.get('content-type')
-
-//             if (contentType == 'application/zip') {
-//                 let mod = await downloadResponse.blob()
-//                 let filename = getFilename(downloadResponse.headers.get('content-disposition'))
-
-//                 downloadBlob(mod, filename)
-//                 setDownloadButtonState(DOWNLOAD_BUTTON_STATE_DEFAULT)
-//             } else if (contentType == 'application/json') {
-//                 let downloadOut = await downloadResponse.json()
-
-//                 if (parseInt(downloadOut.error_id) == DOWNLOAD_ERROR_NOT_FOUND) {
-//                     alert(DOWNLOAD_ALERT_NOT_FOUND)
-//                     btnDownload.remove()
-//                 } else {
-//                     retry()
-//                 }
-//             }
-//         } else {
-//             retry()
-//         }
-//     } catch (e) {
-//         alert(DOWNLOAD_ALERT_ERROR)
-//         setDownloadButtonState(DOWNLOAD_BUTTON_STATE_DEFAULT)
-//     }
-
-//     function retry () {
-//         setTimeout(() => {
-//             requestUntilDonwload(id)
-//         }, RETRY_TIMEOUT_MS)
-//     }
-// }
-
-
-function getFilename (contentDisposition) {
-    let filename = ''
-    let filenameRegex = /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/
-    let matches = filenameRegex.exec(contentDisposition)
-
-    if (matches != null && matches[1]) {
-        filename = matches[1].replace(/['"]/g, '')
+            setDownloadButtonState(button, DOWNLOAD_BUTTON_STATE_BUSY)
+            setDownloadButtonIcon(button, 'loading')
+        })
     }
 
-    return filename
-}
+    if (collectionItems.length > 0) {
+        let bulkButton = renderBulkButton()
+        let node = document.querySelector('.subscribeCollection >:last-child')
 
-function downloadBlob (blob, filename) {
-    const url = URL.createObjectURL(blob)
-    const a = document.createElement('a')
+        if (!node) {
+            return
+        }
 
-    a.href = url
-    a.download = filename || 'download'
+        node.parentElement.insertBefore(bulkButton, node)
 
-    const clickHandler = () => {
-        setTimeout(() => {
-            URL.revokeObjectURL(url)
-            removeEventListener('click', clickHandler)
-        }, 150)
+        bulkButton.addEventListener('click', () => {
+            let mods = []
+
+            for (let id of ids) {
+                let button = getButtonById(id)
+
+                if (!button.getAttribute('disabled')) {
+                    mods.push({
+                        id,
+                        name: button.getAttribute('data-openws-name'),
+                    })
+
+                    setDownloadButtonState(button, DOWNLOAD_BUTTON_STATE_BUSY)
+                    setDownloadButtonIcon(button, 'loading')
+                }
+            }
+
+            chrome.runtime.sendMessage({
+                command: COMMAND_DOWNLOAD,
+                mods,
+            })
+
+            bulkButton.setAttribute("disabled", "true")
+
+            setTimeout(() => {
+                bulkButton.removeAttribute("disabled")
+            }, 5000)
+        })
     }
-
-    a.addEventListener('click', clickHandler, false)
-    a.click()
 }
 
-function setDownloadButtonIcon (icon, title = '') {
-    let iconNode = btnDownload.querySelector('.subscribeIcon')
+function setDownloadButtonIcon (button, icon, title = '') {
+    let iconNode = button.querySelector('.subscribeIcon')
 
     if (icon === 'loading') {
         iconNode.style.backgroundImage = 'none'
-        btnDownload.querySelector('.loader').style.display = 'block'
+        button.querySelector('.loader').style.display = 'block'
     } else {
         iconNode.style.backgroundImage = `url(${chrome.runtime.getURL(icon)})`
         iconNode.style.backgroundSize = 'contain'
         iconNode.style.backgroundPosition = 'center center'
 
-        btnDownload.querySelector('.loader').style.display = 'none'
+        button.querySelector('.loader').style.display = 'none'
     }
 
     if (title == '') {
-        btnDownload.removeAttribute('title')
+        button.removeAttribute('title')
     } else {
-        btnDownload.setAttribute('title', title)
+        button.setAttribute('title', title)
     }
 }
 
-function setDownloadButtonState (state) {
+function setDownloadButtonState (button, state) {
     if (state == DOWNLOAD_BUTTON_STATE_BUSY) {
-        btnDownload.setAttribute('disabled', 'true')
-        btnDownload.querySelector('.subscribeOption').innerHTML = DOWNLOAD_BUTTON_STRING_BUSY
+        button.setAttribute('disabled', 'true')
+        button.querySelector('.subscribeOption').innerHTML = chrome.i18n.getMessage('steampageButtonBusy')
     } else if (state == DOWNLOAD_BUTTON_STATE_DEFAULT) {
-        btnDownload.removeAttribute('disabled')
-        btnDownload.querySelector('.subscribeOption').innerHTML = DOWNLOAD_BUTTON_STRING_DEFAULT
+        button.removeAttribute('disabled')
+        button.querySelector('.subscribeOption').innerHTML = chrome.i18n.getMessage('steampageButtonDownload')
     } else if (state == DOWNLOAD_BUTTON_STATE_ERROR) {
-        btnDownload.setAttribute('disabled', 'true')
-        btnDownload.querySelector('.subscribeOption').innerHTML = DOWNLOAD_BUTTON_STRING_ERROR
+        button.setAttribute('disabled', 'true')
+        button.querySelector('.subscribeOption').innerHTML = chrome.i18n.getMessage('steampageButtonError')
     }
+}
+
+function renderSingleButton (id, name) {
+    let template = /*html*/ `
+        <button id="openws-${id}" data-openws-name="${name}" class="btn_green_white_innerfade btn_border_2px btn_medium" disabled>
+            <div class="subscribeIcon" style="background-image: none">
+                <span class="loader"></span>
+            </div>
+            <span class="subscribeText">
+                <div class="subscribeOption subscribe selected">${chrome.i18n.getMessage(
+                    'steampageButtonDownload'
+                )}</div>
+            </span>
+        </button>
+    `
+    let element = htmlToElement(template)
+
+    element.style.position = 'relative'
+    element.style.marginTop = '10px'
+
+    return element
+}
+
+function renderCollectionButton (id, name) {
+    let template = /*html*/ `
+        <button id="openws-${id}" data-openws-name="${name}" class="general_btn subscribe " disabled>
+            <div class="subscribeIcon" style="background-image: none">
+                <span class="loader"></span>
+            </div>
+            <span class="subscribeText">
+                <div class="subscribeOption subscribe selected">${chrome.i18n.getMessage(
+                    'steampageButtonDownload'
+                )}</div>
+            </span>
+        </button>
+    `
+    let element = htmlToElement(template)
+
+    element.style.marginTop = '5px'
+    element.style.border = '0'
+    element.style.clear = 'both'
+
+    return element
+}
+
+function renderBulkButton () {
+    let template = /*html*/ `
+    <a id="openws-bulk" class="general_btn subscribe">
+        <div class="subscribeIcon"></div>
+        <div class="subscribeText">${chrome.i18n.getMessage('steampageButtonBulk')}</div>
+    </a>
+    `
+
+    return htmlToElement(template)
+}
+
+function getButtonById (id) {
+    return document.getElementById(`openws-${id}`)
 }

@@ -11,8 +11,14 @@
     "indexMainMessage": {
         "message": "Перейдіть на сторінку модифікації та натисніть <b>Завантажити</b>"
     },
+    "historyTableTitle": {
+        "message": "Історія завантажень"
+    },
     "downloadTableName": {
         "message": "Назва"
+    },
+    "downloadTableTitle": {
+        "message": "Активні завантаження"
     },
     "downloadTableStatus": {
         "message": "Статус"
@@ -24,12 +30,7 @@
         "message": "Отримання інформації"
     },
     "downloadTableStatusWait": {
-        "message": "Очікування серверу (%time%)",
-        "placeholders": {
-            "time": {
-              "content": "$1"
-            }
-        }
+        "message": "Очікування серверу"
     },
     "downloadTableStatusReady": {
         "message": "Завантаження"
@@ -44,12 +45,7 @@
         "message": "Отримання інформації про статус модифікації на сервері. Якщо вона ще не завантажена, розширення запросить його завантаження"
     },
     "downloadTableStatusWaitDescription": {
-        "message": "Очікування завантаження модифікації на стороні сервера. Це тривалий процес. Якщо інші модифікації не стоять у черзі, це може зайняти %time%",
-        "placeholders": {
-            "time": {
-              "content": "$1"
-            }
-        }
+        "message": "Очікування завантаження модифікації на стороні сервера"
     },
     "downloadTableStatusReadyDescription": {
         "message": "Розширення завантажує модифікацію"
@@ -74,5 +70,41 @@
     },
     "downloadTableStatusManuallyStopped": {
         "message": "зупинено користувачем"
+    },
+    "steampageButtonDownload": {
+        "message": "Завантажити"
+    },
+    "steampageButtonBusy": {
+        "message": "Очікуйте"
+    },
+    "steampageButtonError": {
+        "message": "Помилка"
+    },
+    "steampageHintError": {
+        "message": "Спроба зв'язатися із сервером або опрацювати результат закінчилася невдачею. Перезавантажте сторінку і спробуйте ще раз."
+    },
+    "steampageHintNotReady": {
+        "message": "Модифікація не готова до швидкого завантаження, завантаження модифікації може зайняти деякий час."
+    },
+    "steampageHintReady": {
+        "message": "Модифікація готова до швидкого завантаження."
+    },
+    "steampageButtonBulk": {
+        "message": "Завантажити все"
+    },
+    "buttonRemove": {
+        "message": "Видалити"
+    },
+    "buttonRepeat": {
+        "message": "Повторити"
+    },
+    "buttonRepeatAll": {
+        "message": "Повторити все"
+    },
+    "buttonRemoveAll": {
+        "message": "Видалити все"
+    },
+    "apiUrlSendedPopoverMessage":  {
+        "message": "Збережено!"
     }
 }

@@ -1,30 +1,92 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Main message</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
-    <style>
-        .main {
-            width: 470px;
-        }
-    </style>
-</head>
-<body>
-    <div class="container pt-2 pb-3 main">
-        <nav class="navbar bg-body-tertiary mb-4">
-            <div class="container-fluid">
-                <img src="icon32.png" alt="" width="26px" style="filter: invert(100%)">
-                <a class="nav-link" href="download.html" target="_blank">__MSG_indexNavLink__</a>
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Main message</title>
+        <link
+            rel="stylesheet"
+            href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.2/font/bootstrap-icons.css"
+            integrity="sha384-b6lVK+yci+bfDmaY1u0zE8YYJt0TZxLEAFyYSLHId4xoVvsrQu3INevFKo+Xir8e"
+            crossorigin="anonymous"
+        />
+        <link
+            href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css"
+            rel="stylesheet"
+            integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9"
+            crossorigin="anonymous"
+        />
+
+        <style>
+            .main {
+                width: 570px;
+                min-height: 200px;
+            }
+
+            /* td:nth-child(3),
+            th:nth-child(3) {
+                display: none;
+            } */
+
+            .table-sizer {
+                min-width: 220px;
+            }
+
+            #download-table .btn-text {
+                display: none;
+            }
+        </style>
+        <script src="bootstrap.bundle.min.js"></script>
+        <script src="set-color-theme.js"></script>
+        <script src="download.js" type="module"></script>
+        <script src="index.js" type="module"></script>
+    </head>
+    <body>
+        <div class="main">
+            <div class="container-fluid pt-3 pb-3">
+                <nav class="navbar bg-body-tertiary mb-4">
+                    <div class="container-fluid">
+                        <img src="icon32.png" alt="" width="26px" style="filter: invert(100%)" />
+                        <div class="input-group w-auto">
+                            <input
+                                class="form-control form-control-sm w-auto"
+                                type="text"
+                                placeholder="https://43093.zetalink.ru"
+                                id="server-url-input"
+                                data-toggle="popover"
+                                data-content="Saved!"
+                            />
+                            <a
+                                class="btn btn-sm btn-outline-secondary"
+                                href="https://github.com/Open-Workshop"
+                                target="_blank"
+                                ><i class="bi bi-question-octagon"></i
+                            ></a>
+                        </div>
+                        <a class="nav-link" href="download.html" target="_blank">__MSG_indexNavLink__</a>
+                    </div>
+                </nav>
+
+                <div id="download" style="display: none" class="mb-5">
+                    <h2>__MSG_downloadTableTitle__</h2>
+                    <table id="download-table" class="table table-hover align-middle">
+                        <thead>
+                            <tr>
+                                <th>__MSG_downloadTableName__</th>
+                                <th>__MSG_downloadTableStatus__</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody class="table-group-divider" id="download-table__body"></tbody>
+                    </table>
+                </div>
+                <div id="help-block" style="display: none">
+                    <div class="main__message">
+                        <p>__MSG_indexMainMessage__</p>
+                        <img class="img-fluid" src="screenshot.png" alt="" width="550px" />
+                    </div>
+                </div>
             </div>
-        </nav>
-        <div class="main__message">
-            <p>__MSG_indexMainMessage__</p>
-            <img class="img-fluid" src="screenshot.png" alt="">
         </div>
-    </div>
-    <script src="set-color-theme.js"></script>
-    <script src="index.js" type="module"></script>
-</body>
+    </body>
 </html>

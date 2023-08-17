@@ -11,8 +11,14 @@
     "indexMainMessage": {
         "message": "Пройдите на страницу мода и нажмите кнопку - <b>Загрузить</b>"
     },
+    "historyTableTitle": {
+        "message": "История загрузок"
+    },
     "downloadTableName": {
         "message": "Название"
+    },
+    "downloadTableTitle": {
+        "message": "Активные загрузки"
     },
     "downloadTableStatus": {
         "message": "Статус"
@@ -24,12 +30,7 @@
         "message": "Получение информации"
     },
     "downloadTableStatusWait": {
-        "message": "Ожидание сервера (%time%)",
-        "placeholders": {
-            "time": {
-              "content": "$1"
-            }
-        }
+        "message": "Ожидание сервера"
     },
     "downloadTableStatusReady": {
         "message": "Загрузка"
@@ -44,12 +45,7 @@
         "message": "Получение информации о статусе мода на сервере. Если он еще не скачан, расширение запросит его загрузку"
     },
     "downloadTableStatusWaitDescription": {
-        "message": "Ожидание загрузки модификации на стороне сервера. Это длительный процесс. Если другие модификации не стоят в очереди это может занять %time%",
-        "placeholders": {
-            "time": {
-              "content": "$1"
-            }
-        }
+        "message": "Ожидание загрузки модификации на стороне сервера"
     },
     "downloadTableStatusReadyDescription": {
         "message": "Расширение скачивает модификацию"
@@ -74,5 +70,41 @@
     },
     "downloadTableStatusManuallyStopped": {
         "message": "остановлено пользователем"
+    },
+    "steampageButtonDownload": {
+        "message": "Загрузить"
+    },
+    "steampageButtonBusy": {
+        "message": "Ожидайте"
+    },
+    "steampageButtonError": {
+        "message": "Ошибка"
+    },
+    "steampageHintError": {
+        "message": "Попытка связатся с сервером или считать результат закончилась неудачей. Перезагрузите страницу и попробуйте еще раз через некоторое время."
+    },
+    "steampageHintNotReady": {
+        "message": "Модификация не готова к быстрой загрузке, скачивание модификации может занять некоторое время."
+    },
+    "steampageHintReady": {
+        "message": "Модификация готова к быстрой загрузке."
+    },
+    "steampageButtonBulk": {
+        "message": "Загрузить все"
+    },
+    "buttonRemove": {
+        "message": "Удалить"
+    },
+    "buttonRepeat": {
+        "message": "Повторить"
+    },
+    "buttonRepeatAll": {
+        "message": "Повторить все"
+    },
+    "buttonRemoveAll": {
+        "message": "Удалить все"
+    },
+    "apiUrlSendedPopoverMessage":  {
+        "message": "Сохранено!"
     }
 }

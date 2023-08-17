@@ -11,8 +11,14 @@
     "indexMainMessage": {
         "message": "Go to the mod page and click the button - <b>Download</b>"
     },
+    "historyTableTitle": {
+        "message": "History"
+    },
     "downloadTableName": {
         "message": "Name"
+    },
+    "downloadTableTitle": {
+        "message": "Downloads"
     },
     "downloadTableStatus": {
         "message": "Status"
@@ -24,13 +30,7 @@
         "message": "Receiving the information"
     },
     "downloadTableStatusWait": {
-        "message": "Waiting for the server (%time%)",
-        "placeholders": {
-            "time": {
-              "content": "$1",
-              "example": "Waiting for the server (5m)"
-            }
-        }
+        "message": "Waiting for the server"
     },
     "downloadTableStatusReady": {
         "message": "Loading"
@@ -45,12 +45,7 @@
         "message": "Getting information about the status of the mod on the server. If it hasn't been downloaded yet, the extension will prompt you to download it"
     },
     "downloadTableStatusWaitDescription": {
-        "message": "Waiting for the modification to load on the server side. This is a long process. If no other modifications are queued, this may take %time%",
-        "placeholders": {
-            "time": {
-              "content": "$1"
-            }
-        }
+        "message": "Waiting for the modification to load on the server side"
     },
     "downloadTableStatusReadyDescription": {
         "message": "The extension downloads the modification"
@@ -75,5 +70,41 @@
     },
     "downloadTableStatusManuallyStopped": {
         "message": "stopped by user"
+    },
+    "steampageButtonDownload": {
+        "message": "Download"
+    },
+    "steampageButtonBusy": {
+        "message": "Wait"
+    },
+    "steampageButtonError": {
+        "message": "Error"
+    },
+    "steampageHintError": {
+        "message": "An attempt to contact the server or read the result failed. Reload the page and try again after a while."
+    },
+    "steampageHintNotReady": {
+        "message": "The modification is not ready for fast download, downloading the modification may take some time."
+    },
+    "steampageHintReady": {
+        "message": "Modification is ready for fast loading."
+    },
+    "steampageButtonBulk": {
+        "message": "Download all"
+    },
+    "buttonRemove": {
+        "message": "Remove"
+    },
+    "buttonRepeat": {
+        "message": "Repeat"
+    },
+    "buttonRepeatAll": {
+        "message": "Repeat All"
+    },
+    "buttonRemoveAll": {
+        "message": "Remove All"
+    },
+    "apiUrlSendedPopoverMessage":  {
+        "message": "Saved!"
     }
 }
