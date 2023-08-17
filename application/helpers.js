@@ -71,3 +71,9 @@ export function isValidUrl (urlString) {
         return false
     }
 }
+
+export function isValidDownloadMime(mime) {
+    let valid = ['application/zip', 'application/x-zip-compressed']
+
+    return valid.indexOf(mime) != -1
+}

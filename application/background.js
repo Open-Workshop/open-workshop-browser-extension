@@ -30,7 +30,7 @@ import {
     STORE_API_URL_KEY,
     COMMAND_UPDATE_API_URL,
 } from './constants.js'
-import { extractContentDispositionFilename, timeout } from './helpers.js'
+import { extractContentDispositionFilename, isValidDownloadMime, timeout } from './helpers.js'
 
 const downloadPageUrl = chrome.runtime.getURL('download.html')
 let rootDomain = ""
@@ -455,7 +455,7 @@ let queue = {
                                 // zip recieved ?
                                 let contentType = response.headers.get('content-type')
 
-                                if (contentType == 'application/zip') {
+                                if (isValidDownloadMime(contentType)) {
                                     await queue.partialDownload(response, item)
                                     queue.removeItem(item)
                                     sendMessageToTabs(downloadPageUrl, {
@@ -546,7 +546,7 @@ let queue = {
 
                 let contentType = response.headers.get('content-type')
 
-                if (contentType == 'application/zip') {
+                if (isValidDownloadMime(contentType)) {
                     await queue.partialDownload(response, item)
                     queue.removeItem(item)
                     sendMessageToTabs([], {

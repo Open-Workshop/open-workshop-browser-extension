@@ -165,6 +165,7 @@ const types = {
     xslt: 'application/xslt+xml',
     xul: 'application/vnd.mozilla.xul+xml',
     xwd: 'image/x-xwindowdump',
+    xzip: 'application/x-zip-compressed',
     vsd: 'application/vnd.visio',
     wav: 'audio/x-wav',
     wbmp: 'image/vnd.wap.wbmp',
