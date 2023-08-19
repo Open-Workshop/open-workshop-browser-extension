@@ -14,6 +14,8 @@ export function replace_i18n (obj, tag) {
 }
 
 export function localizeHtmlPage () {
+    document.querySelector('html').setAttribute('lang', chrome.i18n.getUILanguage())
+
     // Localize using __MSG_***__ data tags
     var data = document.querySelectorAll('[data-localize]')
 
@@ -72,7 +74,7 @@ export function isValidUrl (urlString) {
     }
 }
 
-export function isValidDownloadMime(mime) {
+export function isValidDownloadMime (mime) {
     let valid = ['application/zip', 'application/x-zip-compressed']
 
     return valid.indexOf(mime) != -1
