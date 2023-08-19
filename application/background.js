@@ -660,6 +660,7 @@ async function runCommand (request, sender, sendResponse) {
             break
         case COMMAND_UPDATE_API_URL:
             storage.setStatic(STORE_API_URL_KEY, request.val)
+            rootDomain = request.val
             break
     }
 }
