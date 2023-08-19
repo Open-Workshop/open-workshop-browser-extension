@@ -26,7 +26,6 @@ import {
     OFFSCREEN_BLOB_PATH,
     COMMAND_BLOB_REQUEST,
     COMMAND_BLOB_RESPONSE,
-    COMMAND_DOWNLOAD_DONE,
     STORE_API_URL_KEY,
     COMMAND_UPDATE_API_URL,
 } from './constants.js'
@@ -458,10 +457,6 @@ let queue = {
                                 if (isValidDownloadMime(contentType)) {
                                     await queue.partialDownload(response, item)
                                     queue.removeItem(item)
-                                    sendMessageToTabs(downloadPageUrl, {
-                                        command: COMMAND_DOWNLOAD_DONE,
-                                        mods: [item.id],
-                                    })
                                 } else {
                                     throw new Error('wrong content type')
                                 }
@@ -549,10 +544,6 @@ let queue = {
                 if (isValidDownloadMime(contentType)) {
                     await queue.partialDownload(response, item)
                     queue.removeItem(item)
-                    sendMessageToTabs([], {
-                        command: COMMAND_DOWNLOAD_DONE,
-                        mods: [item.id],
-                    })
                 } else {
                     throw new Error('wrong content type')
                 }
@@ -653,10 +644,6 @@ async function runCommand (request, sender, sendResponse) {
                 timeout(5).then(() => {
                     let item = queue.getItemFromSteps(mod)
                     queue.removeItem(item)
-                    sendMessageToTabs([], {
-                        command: COMMAND_DOWNLOAD_DONE,
-                        mods: [item.id],
-                    })
                 })
                 storage.removeItemFromStorage(STORE_DOWNLOAD_KEY, mod)
                 updateTabs()

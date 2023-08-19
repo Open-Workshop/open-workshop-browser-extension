@@ -28,7 +28,6 @@ export const DOWNLOAD_PROCESS_STEP_FILE = 4
 export const DOWNLOAD_PROCESS_STEP_MANUALLY = 5
 
 export const COMMAND_DOWNLOAD = 'download'
-export const COMMAND_DOWNLOAD_DONE = 'download_done'
 export const COMMAND_CHECK = 'check'
 export const COMMAND_CHECK_RESPONSE = 'check_response'
 export const COMMAND_UPDATE_DATA_REQUEST = 'update_data_request'
