@@ -16,6 +16,7 @@ export const STORE_QUEUE_SIZE_KEY = 'queuesize'
 export const INFO_CONDITION_READY_TO_DOWNLOAD = 0
 export const INFO_CONDITION_PARTIAL = 1
 export const INFO_CONDITION_DOWNLOADING = 2
+export const INFO_CONDITION_QUEUE = 3
 
 export const DOWNLOAD_ERROR_NOT_FOUND = 2
 export const DOWNLOAD_BUTTON_STATE_DEFAULT = 0

@@ -32,6 +32,7 @@ import {
     URL_QUEUE_SIZE,
     COMMAND_UPDATE_QUEUE_SIZE_RESPONSE,
     COMMAND_UPDATE_QUEUE_SIZE_REQUEST,
+    INFO_CONDITION_QUEUE,
 } from './constants.js'
 import { extractContentDispositionFilename, isValidDownloadMime, keepAlive, throttleCreate, timeout } from './helpers.js'
 
@@ -497,7 +498,7 @@ let queue = {
                     }
                 } else if (status == INFO_CONDITION_READY_TO_DOWNLOAD || status == INFO_CONDITION_PARTIAL) {
                     queue.moveItemToStep(item, DOWNLOAD_PROCESS_STEP_READY)
-                } else if (status == INFO_CONDITION_DOWNLOADING) {
+                } else if (status == INFO_CONDITION_DOWNLOADING || status == INFO_CONDITION_QUEUE) {
                     queue.moveItemToStep(item, DOWNLOAD_PROCESS_STEP_WAIT)
                 }
             }
@@ -532,7 +533,7 @@ let queue = {
                     queue.moveItemToStep(item, DOWNLOAD_PROCESS_STEP_MANUALLY)
                 } else if (status == INFO_CONDITION_READY_TO_DOWNLOAD || status == INFO_CONDITION_PARTIAL) {
                     queue.moveItemToStep(item, DOWNLOAD_PROCESS_STEP_READY)
-                } else if (status == INFO_CONDITION_DOWNLOADING) {
+                } else if (status == INFO_CONDITION_DOWNLOADING || status == INFO_CONDITION_QUEUE) {
                     queue.moveItemToStep(item, DOWNLOAD_PROCESS_STEP_WAIT)
                 }
             }

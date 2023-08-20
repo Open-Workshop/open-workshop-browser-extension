@@ -41,7 +41,6 @@ function updateInputValue (event) {
     }
 
     updateQueueSize(event.detail.queue)
-    // document.body.removeEventListener(COMMAND_UPDATE_DATA_RESPONSE, updateInputValue)
 }
 
 function updateApiUrl (input) {
@@ -72,7 +71,6 @@ function updateApiUrl (input) {
 }
 
 function updateQueueSize (value) {
-    // let wrap = document.querySelector('#queue-size-wrap')
     let valueContainer = document.querySelector('#queue-size')
 
     valueContainer.innerHTML = value.toString()
