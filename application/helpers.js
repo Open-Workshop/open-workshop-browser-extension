@@ -83,3 +83,16 @@ export function isValidDownloadMime (mime) {
 export function keepAlive () {
     setInterval(chrome.runtime.getPlatformInfo, 20e3)
 }
+
+export function throttleCreate (callback, time) {
+    let throttleTimer
+
+    return function (...args) {
+        if (throttleTimer) return
+        throttleTimer = true
+        setTimeout(() => {
+            callback(...args)
+            throttleTimer = false
+        }, time)
+    }
+}

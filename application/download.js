@@ -4,6 +4,7 @@ import {
     COMMAND_REPEAT_DOWNLOAD,
     COMMAND_UPDATE_DATA_REQUEST,
     COMMAND_UPDATE_DATA_RESPONSE,
+    COMMAND_UPDATE_QUEUE_SIZE_RESPONSE,
     DOWNLOAD_PROCESS_STEP_INFO,
     DOWNLOAD_PROCESS_STEP_MANUALLY,
     DOWNLOAD_PROCESS_STEP_NEW,
@@ -149,6 +150,9 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
             progressBar.style.width = percent + '%'
             progressRoot.setAttribute('aria-valuenow', percent)
         }
+    } else if (request.command && request.command == COMMAND_UPDATE_QUEUE_SIZE_RESPONSE) {
+        let event = new CustomEvent(COMMAND_UPDATE_QUEUE_SIZE_RESPONSE, { detail: request })
+        document.body.dispatchEvent(event)
     }
 })
 

@@ -1,4 +1,9 @@
-import { COMMAND_UPDATE_API_URL, COMMAND_UPDATE_DATA_RESPONSE } from './constants.js'
+import {
+    COMMAND_UPDATE_API_URL,
+    COMMAND_UPDATE_DATA_RESPONSE,
+    COMMAND_UPDATE_QUEUE_SIZE_REQUEST,
+    COMMAND_UPDATE_QUEUE_SIZE_RESPONSE,
+} from './constants.js'
 import { isValidUrl, localizeHtmlPage } from './helpers.js'
 
 localizeHtmlPage()
@@ -18,12 +23,25 @@ input.addEventListener('keyup', () => {
     updateApiUrl(input)
 })
 
+setInterval(() => {
+    chrome.runtime.sendMessage({
+        command: COMMAND_UPDATE_QUEUE_SIZE_REQUEST,
+    })
+}, 2000)
+
+document.body.addEventListener(COMMAND_UPDATE_QUEUE_SIZE_RESPONSE, event => {
+    updateQueueSize(event.detail.val)
+})
+
 document.body.addEventListener(COMMAND_UPDATE_DATA_RESPONSE, updateInputValue)
 
 function updateInputValue (event) {
-    input.value = event.detail.apiUrl
+    if (input.value != event.detail.apiUrl) {
+        input.value = event.detail.apiUrl
+    }
 
-    document.body.removeEventListener(COMMAND_UPDATE_DATA_RESPONSE, updateInputValue)
+    updateQueueSize(event.detail.queue)
+    // document.body.removeEventListener(COMMAND_UPDATE_DATA_RESPONSE, updateInputValue)
 }
 
 function updateApiUrl (input) {
@@ -51,4 +69,11 @@ function updateApiUrl (input) {
             inputPopover.hide()
         }, 1000)
     }, 200)
+}
+
+function updateQueueSize (value) {
+    // let wrap = document.querySelector('#queue-size-wrap')
+    let valueContainer = document.querySelector('#queue-size')
+
+    valueContainer.innerHTML = value.toString()
 }

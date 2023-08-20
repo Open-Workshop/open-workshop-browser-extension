@@ -28,8 +28,12 @@ import {
     COMMAND_BLOB_RESPONSE,
     STORE_API_URL_KEY,
     COMMAND_UPDATE_API_URL,
+    STORE_QUEUE_SIZE_KEY,
+    URL_QUEUE_SIZE,
+    COMMAND_UPDATE_QUEUE_SIZE_RESPONSE,
+    COMMAND_UPDATE_QUEUE_SIZE_REQUEST,
 } from './constants.js'
-import { extractContentDispositionFilename, isValidDownloadMime, keepAlive, timeout } from './helpers.js'
+import { extractContentDispositionFilename, isValidDownloadMime, keepAlive, throttleCreate, timeout } from './helpers.js'
 
 const downloadPageUrl = chrome.runtime.getURL('download.html')
 let rootDomain = ''
@@ -50,6 +54,9 @@ let storage = {
     },
     static: {
         [STORE_API_URL_KEY]: '',
+    },
+    dynamic: {
+        [STORE_QUEUE_SIZE_KEY]: 0,
     },
     readyResolver (resolve) {
         resolve()
@@ -95,6 +102,12 @@ let storage = {
     setStatic (key, value) {
         this.static[key] = value
         this.runSync()
+    },
+    getDynamic (key) {
+        return this.dynamic[key]
+    },
+    setDynamic (key, value) {
+        this.dynamic[key] = value
     },
     async runSync () {
         if (this.syncRunned) {
@@ -569,10 +582,13 @@ let queue = {
 
 let updateTabProcess = false
 
+let monitorQueueThrottle
+
 init()
 
 async function init () {
-    console.log("startup")
+    console.log('startup')
+
     keepAlive()
 
     chrome.runtime.onMessage.addListener(async function (request, sender, sendResponse) {
@@ -666,6 +682,9 @@ async function runCommand (request, sender, sendResponse) {
         case COMMAND_UPDATE_API_URL:
             storage.setStatic(STORE_API_URL_KEY, request.val)
             rootDomain = request.val
+            break
+        case COMMAND_UPDATE_QUEUE_SIZE_REQUEST:
+            monitorQueue(true)
             break
     }
 }
@@ -762,6 +781,7 @@ async function updateTabs () {
             [STORE_HISTORY_KEY]: storage.getItemsFromStorage(STORE_HISTORY_KEY),
         },
         apiUrl: storage.getStatic(STORE_API_URL_KEY),
+        queue: storage.getDynamic(STORE_QUEUE_SIZE_KEY),
     }
 
     let urls = [downloadPageUrl]
@@ -809,5 +829,45 @@ async function sendMessageToTabs (urls = [], message = {}, withRuntime = false) 
         await Promise.all(promises)
     } catch (e) {
         console.warn(e, tabs)
+    }
+}
+
+async function monitorQueue (force) {
+   
+    if (force) {
+        let queueSize = storage.getDynamic(STORE_QUEUE_SIZE_KEY)
+        send(queueSize)
+    }
+
+    if (!monitorQueueThrottle) {
+        monitorQueueThrottle = throttleCreate(f, 1000)
+    } else {
+        monitorQueueThrottle()
+    }
+
+    async function f () {
+        let isAction = await chrome.action.isEnabled()
+
+        if (isAction) {
+            try {
+                let response = await fetch(rootDomain + URL_QUEUE_SIZE)
+                let count = await response.json()
+
+                if (storage.getDynamic(STORE_QUEUE_SIZE_KEY) != count) {
+                    storage.setDynamic(STORE_QUEUE_SIZE_KEY, count)
+
+                    send(count)
+                }
+            } catch (e) {
+                console.warn(e)
+            }
+        }
+    }
+
+    function send (val) {
+        sendMessageToTabs([], {
+            command: COMMAND_UPDATE_QUEUE_SIZE_RESPONSE,
+            val,
+        })
     }
 }
