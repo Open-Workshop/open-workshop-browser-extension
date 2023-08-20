@@ -153,7 +153,7 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
 })
 
 chrome.runtime.sendMessage({
-    command: COMMAND_UPDATE_DATA_REQUEST,
+    command: COMMAND_UPDATE_DATA_REQUEST
 })
 
 function initCommonButtons () {

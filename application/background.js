@@ -29,10 +29,10 @@ import {
     STORE_API_URL_KEY,
     COMMAND_UPDATE_API_URL,
 } from './constants.js'
-import { extractContentDispositionFilename, isValidDownloadMime, timeout } from './helpers.js'
+import { extractContentDispositionFilename, isValidDownloadMime, keepAlive, timeout } from './helpers.js'
 
 const downloadPageUrl = chrome.runtime.getURL('download.html')
-let rootDomain = ""
+let rootDomain = ''
 
 /**
  * Хранилище chrome.storage.local асинхронное, паралельная работа с ним
@@ -174,7 +174,7 @@ let controlledFetch = {
             this.requestList[marker].push(abortController)
         }
 
-        let response = fetch(rootDomain+url, { ...config, ...{ signal: abortController.signal } })
+        let response = fetch(rootDomain + url, { ...config, ...{ signal: abortController.signal } })
 
         response.finally(() => {
             for (let marker of abortMarker) {
@@ -571,22 +571,25 @@ let updateTabProcess = false
 
 init()
 
-chrome.runtime.onMessage.addListener(async function (request, sender, sendResponse) {
-    await storage.ready
-
-    if (request.command) {
-        //console.log('Сервис воркер получил сообщение: ' + request.command + ' ' + JSON.stringify(request))
-        runCommand(request, sender, sendResponse)
-    }
-})
-
-chrome.tabs.onActivated.addListener(async activeInfo => {
-    await storage.ready
-
-    updateTabs()
-})
-
 async function init () {
+    console.log("startup")
+    keepAlive()
+
+    chrome.runtime.onMessage.addListener(async function (request, sender, sendResponse) {
+        await storage.ready
+
+        if (request.command) {
+            //console.log('Сервис воркер получил сообщение: ' + request.command + ' ' + JSON.stringify(request))
+            runCommand(request, sender, sendResponse)
+        }
+    })
+
+    chrome.tabs.onActivated.addListener(async activeInfo => {
+        await storage.ready
+
+        updateTabs()
+    })
+
     storage.init()
 
     await storage.ready
@@ -643,7 +646,9 @@ async function runCommand (request, sender, sendResponse) {
                 controlledFetch.abort(mod)
                 timeout(5).then(() => {
                     let item = queue.getItemFromSteps(mod)
-                    queue.removeItem(item)
+                    if (item) {
+                        queue.removeItem(item)
+                    }
                 })
                 storage.removeItemFromStorage(STORE_DOWNLOAD_KEY, mod)
                 updateTabs()
@@ -717,7 +722,7 @@ async function checkModificationsServerStatus (ids) {
         let niqIds = notInQueue.splice(0, BATCH_LIMIT)
 
         try {
-            let response = await fetch(rootDomain+URL_BATCH_STATUS + encodeURIComponent('[' + niqIds.join(',') + ']'))
+            let response = await fetch(rootDomain + URL_BATCH_STATUS + encodeURIComponent('[' + niqIds.join(',') + ']'))
 
             if (response.status == 200) {
                 let out = await response.json()

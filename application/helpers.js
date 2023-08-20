@@ -79,3 +79,7 @@ export function isValidDownloadMime (mime) {
 
     return valid.indexOf(mime) != -1
 }
+
+export function keepAlive () {
+    setInterval(chrome.runtime.getPlatformInfo, 20e3)
+}
