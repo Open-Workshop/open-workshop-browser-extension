@@ -106,5 +106,11 @@
     },
     "apiUrlSendedPopoverMessage":  {
         "message": "Сохранено!"
+    },
+    "buttonHardReload":  {
+        "message": "Перезагрузить"
+    },
+    "buttonStorageClean":  {
+        "message": "Очистить базу даных"
     }
 }

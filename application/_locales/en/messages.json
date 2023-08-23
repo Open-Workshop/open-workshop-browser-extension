@@ -106,5 +106,11 @@
     },
     "apiUrlSendedPopoverMessage":  {
         "message": "Saved!"
+    },
+    "buttonHardReload":  {
+        "message": "Reload"
+    },
+    "buttonStorageClean":  {
+        "message": "Clean storage"
     }
 }

@@ -35,6 +35,27 @@ document.body.addEventListener(COMMAND_UPDATE_QUEUE_SIZE_RESPONSE, event => {
 
 document.body.addEventListener(COMMAND_UPDATE_DATA_RESPONSE, updateInputValue)
 
+let hardReloadButtons = document.querySelectorAll('.js-hard-reload')
+
+if (hardReloadButtons.length) {
+    for (let hardReloadButton of hardReloadButtons) {
+        hardReloadButton.addEventListener('click', () => {
+            chrome.runtime.reload()
+        });
+    }
+}
+
+let storageCleanButtons = document.querySelectorAll('.js-clean-storage')
+
+if (storageCleanButtons.length) {
+    for (let storageCleanButton of storageCleanButtons) {
+        storageCleanButton.addEventListener('click', async () => {
+            await chrome.storage.local.clear()
+            chrome.runtime.reload()
+        });
+    }
+}
+
 function updateInputValue (event) {
     if (input.value != event.detail.apiUrl) {
         input.value = event.detail.apiUrl
