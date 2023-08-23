@@ -34,7 +34,13 @@ import {
     COMMAND_UPDATE_QUEUE_SIZE_REQUEST,
     INFO_CONDITION_QUEUE,
 } from './constants.js'
-import { extractContentDispositionFilename, isValidDownloadMime, keepAlive, throttleCreate, timeout } from './helpers.js'
+import {
+    extractContentDispositionFilename,
+    isValidDownloadMime,
+    keepAlive,
+    throttleCreate,
+    timeout,
+} from './helpers.js'
 
 const downloadPageUrl = chrome.runtime.getURL('download.html')
 let rootDomain = ''
@@ -190,13 +196,13 @@ let controlledFetch = {
 
         let response = fetch(rootDomain + url, { ...config, ...{ signal: abortController.signal } })
 
-        response.finally(() => {
+        let clean = () => {
             for (let marker of abortMarker) {
                 this.requestList[marker] = this.requestList[marker].filter(controller => controller != abortController)
             }
-        })
+        }
 
-        return response
+        return { response, clean }
     },
     abort (abortMarker) {
         if (!Array.isArray(abortMarker)) {
@@ -211,6 +217,7 @@ let controlledFetch = {
                         ids: abortMarker,
                     })
                 }
+                this.requestList[marker] = []
             }
         }
     },
@@ -263,6 +270,10 @@ let queue = {
         let fixedItem
         if (item.id === undefined) {
             fixedItem = queue.getItemFromSteps(item)
+
+            if (!fixedItem) {
+                return
+            }
         } else {
             fixedItem = item
         }
@@ -332,12 +343,14 @@ let queue = {
         let out
 
         if (items && items.length > 0) {
+            let cfResponse = controlledFetch.fetch(
+                URL_BATCH_STATUS + encodeURIComponent('[' + ids.join(',') + ']'),
+                {},
+                ids
+            )
+
             try {
-                let response = await controlledFetch.fetch(
-                    URL_BATCH_STATUS + encodeURIComponent('[' + ids.join(',') + ']'),
-                    {},
-                    ids
-                )
+                let response = await cfResponse.response
 
                 out = await response.json()
             } catch (e) {
@@ -348,6 +361,8 @@ let queue = {
                     console.warn(e)
                 }
             }
+
+            cfResponse.clean()
         }
 
         return {
@@ -460,8 +475,10 @@ let queue = {
                 let status = out[item.id]
 
                 if (status === undefined) {
+                    let cfResponse = controlledFetch.fetch(URL_DOWNLOAD + item.id, {}, item.id)
+
                     try {
-                        let response = await controlledFetch.fetch(URL_DOWNLOAD + item.id, {}, item.id)
+                        let response = await cfResponse.response
 
                         switch (response.status) {
                             case 200:
@@ -496,6 +513,8 @@ let queue = {
                             queue.moveItemToStep(item, DOWNLOAD_PROCESS_STEP_MANUALLY)
                         }
                     }
+
+                    cfResponse.clean()
                 } else if (status == INFO_CONDITION_READY_TO_DOWNLOAD || status == INFO_CONDITION_PARTIAL) {
                     queue.moveItemToStep(item, DOWNLOAD_PROCESS_STEP_READY)
                 } else if (status == INFO_CONDITION_DOWNLOADING || status == INFO_CONDITION_QUEUE) {
@@ -549,9 +568,10 @@ let queue = {
     [DOWNLOAD_PROCESS_STEP_READY]: async function () {
         let execute = async () => {
             let item = queue.steps[DOWNLOAD_PROCESS_STEP_READY].shift()
-
+            let cfResponse = controlledFetch.fetch(URL_DIRECT_DOWNLOAD + item.id, {}, item.id)
+            
             try {
-                let response = await controlledFetch.fetch(URL_DIRECT_DOWNLOAD + item.id, {}, item.id)
+                let response = await cfResponse.response
 
                 let contentType = response.headers.get('content-type')
 
@@ -563,13 +583,14 @@ let queue = {
                 }
             } catch (e) {
                 if (e.name != 'AbortError') {
-                    console.warn(e)
                     item.info = chrome.i18n.getMessage('downloadTableStatusManuallyServerErrorDownload')
                     queue.moveItemToStep(item, DOWNLOAD_PROCESS_STEP_MANUALLY)
                 }
 
                 console.warn(e)
             }
+
+            cfResponse.clean()
         }
 
         while (queue.steps[DOWNLOAD_PROCESS_STEP_READY].length != 0) {
@@ -666,9 +687,9 @@ async function runCommand (request, sender, sendResponse) {
                     if (item) {
                         queue.removeItem(item)
                     }
+                    updateTabs()
                 })
-                storage.removeItemFromStorage(STORE_DOWNLOAD_KEY, mod)
-                updateTabs()
+                storage.removeItemFromStorage(STORE_DOWNLOAD_KEY, {id: mod})
             }
 
             break
@@ -834,7 +855,6 @@ async function sendMessageToTabs (urls = [], message = {}, withRuntime = false) 
 }
 
 async function monitorQueue (force) {
-   
     if (force) {
         let queueSize = storage.getDynamic(STORE_QUEUE_SIZE_KEY)
         send(queueSize)
