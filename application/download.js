@@ -228,7 +228,7 @@ function renderHistoryRow (item) {
 function renderRow (item) {
     let template = /*html*/ `
         <tr data-itemid="${item.id}">
-            <td>${item.name}</td>
+            <td><div class="table-name-sizer">${item.name}<div></td>
             <td>${getStatusTemplate(item)}</th>
             <td>
                 <div class="w-auto text-end text-nowrap">

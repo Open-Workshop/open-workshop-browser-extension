@@ -1,2 +1,6 @@
 ::-webkit-scrollbar { width: 8px; height: 3px;}
 ::-webkit-scrollbar-thumb { height: 0px; background-color: #666; border-radius: 3px;}
+
+.table-sizer {
+    min-width: 270px;
+}
