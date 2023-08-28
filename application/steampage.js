@@ -5,7 +5,6 @@ import {
     COMMAND_CHECK_RESPONSE,
     COMMAND_CHECK,
     COMMAND_DOWNLOAD,
-    URL_UPDATE_SERVER_DATA,
     COMMAND_UPDATE_SERVER_DATA_REQUEST,
 } from './constants.js'
 
@@ -20,24 +19,26 @@ export function main () {
         if (request.command && request.command == COMMAND_CHECK_RESPONSE) {
             for (let id of ids) {
                 let res = request.status_list[id]
-                let button = getButtonById(id)
+                let buttons = getButtonsById(id)
 
-                if (!button) {
+                if (!buttons.length) {
                     continue
                 }
 
-                if (res === undefined) {
-                    setDownloadButtonState(button, DOWNLOAD_BUTTON_STATE_ERROR)
-                    setDownloadButtonIcon(button, 'warning.png', chrome.i18n.getMessage('steampageHintError'))
-                } else if (res === false) {
-                    setDownloadButtonState(button, DOWNLOAD_BUTTON_STATE_DEFAULT)
-                    setDownloadButtonIcon(button, 'turtle.png', chrome.i18n.getMessage('steampageHintNotReady'))
-                } else if (res === true) {
-                    setDownloadButtonState(button, DOWNLOAD_BUTTON_STATE_DEFAULT)
-                    setDownloadButtonIcon(button, 'rabbit.png', chrome.i18n.getMessage('steampageHintReady'))
-                } else if (res === 'busy') {
-                    setDownloadButtonState(button, DOWNLOAD_BUTTON_STATE_BUSY)
-                    setDownloadButtonIcon(button, 'loading')
+                for (let button of buttons) {
+                    if (res === undefined) {
+                        setDownloadButtonState(button, DOWNLOAD_BUTTON_STATE_ERROR)
+                        setDownloadButtonIcon(button, 'warning.png', chrome.i18n.getMessage('steampageHintError'))
+                    } else if (res === false) {
+                        setDownloadButtonState(button, DOWNLOAD_BUTTON_STATE_DEFAULT)
+                        setDownloadButtonIcon(button, 'turtle.png', chrome.i18n.getMessage('steampageHintNotReady'))
+                    } else if (res === true) {
+                        setDownloadButtonState(button, DOWNLOAD_BUTTON_STATE_DEFAULT)
+                        setDownloadButtonIcon(button, 'rabbit.png', chrome.i18n.getMessage('steampageHintReady'))
+                    } else if (res === 'busy') {
+                        setDownloadButtonState(button, DOWNLOAD_BUTTON_STATE_BUSY)
+                        setDownloadButtonIcon(button, 'loading')
+                    }
                 }
             }
         }
@@ -84,16 +85,18 @@ export async function domLoad () {
             let mods = []
 
             for (let id of ids) {
-                let button = getButtonById(id)
+                let buttons = getButtonsById(id)
 
-                if (!button.getAttribute('disabled')) {
-                    mods.push({
-                        id,
-                        name: button.getAttribute('data-openws-name'),
-                    })
-
-                    setDownloadButtonState(button, DOWNLOAD_BUTTON_STATE_BUSY)
-                    setDownloadButtonIcon(button, 'loading')
+                for (let button of buttons) {
+                    if (!button.getAttribute('disabled')) {
+                        mods.push({
+                            id,
+                            name: button.getAttribute('data-openws-name'),
+                        })
+    
+                        setDownloadButtonState(button, DOWNLOAD_BUTTON_STATE_BUSY)
+                        setDownloadButtonIcon(button, 'loading')
+                    }
                 }
             }
 
@@ -139,23 +142,25 @@ export async function domLoad () {
     })
 
     for (let id of ids) {
-        let button = getButtonById(id)
+        let buttons = getButtonsById(id)
 
-        if (button.nodeName != 'BUTTON') {
-            continue
-        }
-
-        button.addEventListener('click', async () => {
-            let name = button.getAttribute('data-openws-name')
-
-            chrome.runtime.sendMessage({
-                command: COMMAND_DOWNLOAD,
-                mods: [{ id, name }],
+        for (let button of buttons) {
+            if (button.nodeName != 'BUTTON') {
+                continue
+            }
+    
+            button.addEventListener('click', async () => {
+                let name = button.getAttribute('data-openws-name')
+    
+                chrome.runtime.sendMessage({
+                    command: COMMAND_DOWNLOAD,
+                    mods: [{ id, name }],
+                })
+    
+                setDownloadButtonState(button, DOWNLOAD_BUTTON_STATE_BUSY)
+                setDownloadButtonIcon(button, 'loading')
             })
-
-            setDownloadButtonState(button, DOWNLOAD_BUTTON_STATE_BUSY)
-            setDownloadButtonIcon(button, 'loading')
-        })
+        }
     }
 }
 
@@ -195,6 +200,6 @@ function setDownloadButtonState (button, state) {
     }
 }
 
-function getButtonById (id) {
-    return document.getElementById(`openws-${id}`)
+function getButtonsById (id) {
+    return document.querySelectorAll(`[data-openws="${id}"], #openws-${id}`)
 }

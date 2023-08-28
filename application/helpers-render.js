@@ -57,7 +57,7 @@ export function renderBulkButton () {
 
 export function renderStatusIcon(id) {
     let template = /*html*/`
-        <span id="openws-${id}" class="openws-status-icon">
+        <span class="openws-status-icon" data-openws="${id}">
             <div class="subscribeIcon openws-suscribeicon-status" style="background-image: none">
                 <span class="loader"></span>
             </div>
