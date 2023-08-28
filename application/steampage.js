@@ -5,10 +5,11 @@ import {
     COMMAND_CHECK_RESPONSE,
     COMMAND_CHECK,
     COMMAND_DOWNLOAD,
-    BATCH_LIMIT
 } from './constants.js'
 
-import { htmlToElement, timeout } from './helpers.js'
+import { timeout } from './helpers.js'
+import { renderBulkButton, renderCollectionButton, renderSingleButton } from './helpers-render.js'
+import { domWorkshopBrowse, domWorkshopHome } from './helpers-dom.js'
 
 let ids = []
 
@@ -94,13 +95,19 @@ export async function domLoad () {
                 mods,
             })
 
-            bulkButton.setAttribute("disabled", "true")
+            bulkButton.setAttribute('disabled', 'true')
 
             setTimeout(() => {
-                bulkButton.removeAttribute("disabled")
+                bulkButton.removeAttribute('disabled')
             }, 5000)
         })
     }
+
+    ids = [
+        ...ids, 
+        ...domWorkshopHome(), 
+        ...domWorkshopBrowse()
+    ]
 
     let flush = 0
     for (let cItem of collectionItems) {
@@ -126,6 +133,11 @@ export async function domLoad () {
 
     for (let id of ids) {
         let button = getButtonById(id)
+
+        if (button.nodeName != 'BUTTON') {
+            continue
+        }
+
         button.addEventListener('click', async () => {
             let name = button.getAttribute('data-openws-name')
 
@@ -162,6 +174,8 @@ function setDownloadButtonIcon (button, icon, title = '') {
 }
 
 function setDownloadButtonState (button, state) {
+    if (button.nodeName != 'BUTTON') return
+
     if (state == DOWNLOAD_BUTTON_STATE_BUSY) {
         button.setAttribute('disabled', 'true')
         button.querySelector('.subscribeOption').innerHTML = chrome.i18n.getMessage('steampageButtonBusy')
@@ -172,60 +186,6 @@ function setDownloadButtonState (button, state) {
         button.setAttribute('disabled', 'true')
         button.querySelector('.subscribeOption').innerHTML = chrome.i18n.getMessage('steampageButtonError')
     }
-}
-
-function renderSingleButton (id, name) {
-    let template = /*html*/ `
-        <button id="openws-${id}" data-openws-name="${name}" class="btn_green_white_innerfade btn_border_2px btn_medium" disabled>
-            <div class="subscribeIcon" style="background-image: none">
-                <span class="loader"></span>
-            </div>
-            <span class="subscribeText">
-                <div class="subscribeOption subscribe selected">${chrome.i18n.getMessage(
-                    'steampageButtonDownload'
-                )}</div>
-            </span>
-        </button>
-    `
-    let element = htmlToElement(template)
-
-    element.style.position = 'relative'
-    element.style.marginTop = '10px'
-
-    return element
-}
-
-function renderCollectionButton (id, name) {
-    let template = /*html*/ `
-        <button id="openws-${id}" data-openws-name="${name}" class="general_btn subscribe " disabled>
-            <div class="subscribeIcon" style="background-image: none">
-                <span class="loader"></span>
-            </div>
-            <span class="subscribeText">
-                <div class="subscribeOption subscribe selected">${chrome.i18n.getMessage(
-                    'steampageButtonDownload'
-                )}</div>
-            </span>
-        </button>
-    `
-    let element = htmlToElement(template)
-
-    element.style.marginTop = '5px'
-    element.style.border = '0'
-    element.style.clear = 'both'
-
-    return element
-}
-
-function renderBulkButton () {
-    let template = /*html*/ `
-    <a id="openws-bulk" class="general_btn subscribe">
-        <div class="subscribeIcon"></div>
-        <div class="subscribeText">${chrome.i18n.getMessage('steampageButtonBulk')}</div>
-    </a>
-    `
-
-    return htmlToElement(template)
 }
 
 function getButtonById (id) {

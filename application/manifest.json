@@ -1,6 +1,6 @@
 {
   "name": "__MSG_extName__",
-  "version": "0.9.2",
+  "version": "0.9.3",
   "manifest_version": 3,
   "description": "__MSG_extDescr__",
   "default_locale": "en",
@@ -20,7 +20,18 @@
   },  
   "web_accessible_resources": [
     {
-      "resources": ["index.js", "download.html", "steampage.js", "constants.js", "helpers.js", "rabbit.png", "turtle.png", "warning.png"],
+      "resources": [
+        "index.js", 
+        "download.html",
+        "steampage.js", 
+        "constants.js", 
+        "helpers.js", 
+        "helpers-dom.js", 
+        "helpers-render.js", 
+        "rabbit.png", 
+        "turtle.png", 
+        "warning.png"
+      ],
       "matches": ["<all_urls>"]
     }
   ],
@@ -36,7 +47,9 @@
       "css": ["loader.css", "steampage.css"],
       "matches": [
         "https://steamcommunity.com/sharedfiles/filedetails/*",
-        "https://steamcommunity.com/workshop/filedetails/*"
+        "https://steamcommunity.com/workshop/filedetails/*",
+        "https://steamcommunity.com/app/*",
+        "https://steamcommunity.com/workshop/browse/*"
       ],
       "run_at": "document_end"
     }
