@@ -23,15 +23,22 @@ input.addEventListener('keyup', () => {
     updateApiUrl(input)
 })
 
+input.addEventListener('change', () => {
+    if (input.value == '') {
+        input.classList.add('is-invalid')
+    } else {
+        input.classList.remove('is-invalid')
+    }
+})
+
 setInterval(() => {
     chrome.runtime.sendMessage({
         command: COMMAND_UPDATE_QUEUE_SIZE_REQUEST,
     })
 }, 2000)
 
-
 let queueIcon = document.querySelector('#queue-size-wrap i')
-queueIconPopover =  new bootstrap.Popover(queueIcon, {
+new bootstrap.Popover(queueIcon, {
     container: 'body',
     placement: 'bottom',
     trigger: 'hover',
@@ -50,7 +57,7 @@ if (hardReloadButtons.length) {
     for (let hardReloadButton of hardReloadButtons) {
         hardReloadButton.addEventListener('click', () => {
             chrome.runtime.reload()
-        });
+        })
     }
 }
 
@@ -61,7 +68,7 @@ if (storageCleanButtons.length) {
         storageCleanButton.addEventListener('click', async () => {
             await chrome.storage.local.clear()
             chrome.runtime.reload()
-        });
+        })
     }
 }
 
@@ -71,6 +78,8 @@ function updateInputValue (event) {
     }
 
     updateQueueSize(event.detail.queue)
+    
+    input.dispatchEvent(new Event('change'))
 }
 
 function updateApiUrl (input) {
