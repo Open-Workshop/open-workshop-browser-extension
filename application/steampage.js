@@ -5,6 +5,8 @@ import {
     COMMAND_CHECK_RESPONSE,
     COMMAND_CHECK,
     COMMAND_DOWNLOAD,
+    URL_UPDATE_SERVER_DATA,
+    COMMAND_UPDATE_SERVER_DATA_REQUEST,
 } from './constants.js'
 
 import { timeout } from './helpers.js'
@@ -59,6 +61,11 @@ export async function domLoad () {
         container.appendChild(btn)
 
         ids.push(id)
+
+        chrome.runtime.sendMessage({
+            command: COMMAND_UPDATE_SERVER_DATA_REQUEST,
+            mods: [id],
+        })
     }
 
     let collectionItems = document.querySelectorAll('.collectionItem')

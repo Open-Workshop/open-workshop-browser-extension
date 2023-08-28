@@ -33,6 +33,8 @@ import {
     COMMAND_UPDATE_QUEUE_SIZE_RESPONSE,
     COMMAND_UPDATE_QUEUE_SIZE_REQUEST,
     INFO_CONDITION_QUEUE,
+    COMMAND_UPDATE_SERVER_DATA_REQUEST,
+    URL_UPDATE_SERVER_DATA,
 } from './constants.js'
 import {
     extractContentDispositionFilename,
@@ -708,6 +710,10 @@ async function runCommand (request, sender, sendResponse) {
         case COMMAND_UPDATE_QUEUE_SIZE_REQUEST:
             monitorQueue(true)
             break
+        case COMMAND_UPDATE_SERVER_DATA_REQUEST:    
+            fetch(rootDomain+URL_UPDATE_SERVER_DATA+request.mods[0]).catch(e => {
+                console.warn(e)
+            })
     }
 }
 
