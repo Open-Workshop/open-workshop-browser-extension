@@ -112,5 +112,8 @@
     },
     "buttonStorageClean":  {
         "message": "Очистить базу даных"
+    },
+    "queueIconMessage": {
+        "message": "Количество модификаций в очереди на загрузку у сервера"
     }
 }

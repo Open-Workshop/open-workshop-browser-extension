@@ -112,5 +112,8 @@
     },
     "buttonStorageClean":  {
         "message": "Clean storage"
+    },
+    "queueIconMessage": {
+        "message": "The number of modifications in the queue for downloading from the server"
     }
 }

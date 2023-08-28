@@ -29,6 +29,15 @@ setInterval(() => {
     })
 }, 2000)
 
+
+let queueIcon = document.querySelector('#queue-size-wrap i')
+queueIconPopover =  new bootstrap.Popover(queueIcon, {
+    container: 'body',
+    placement: 'bottom',
+    trigger: 'hover',
+    content: chrome.i18n.getMessage('queueIconMessage'),
+})
+
 document.body.addEventListener(COMMAND_UPDATE_QUEUE_SIZE_RESPONSE, event => {
     updateQueueSize(event.detail.val)
 })

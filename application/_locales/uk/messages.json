@@ -112,5 +112,8 @@
     },
     "buttonStorageClean":  {
         "message": "Скинути базу даних"
+    },
+    "queueIconMessage": {
+        "message": "Кількість модифікацій у черзі на завантаження у сервера"
     }
 }
