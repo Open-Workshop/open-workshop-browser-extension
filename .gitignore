@@ -1,2 +1,3 @@
 build/*.crx
+!build/v*.crx
 *.pem
